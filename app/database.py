@@ -6,8 +6,8 @@ from app.tools.utils import get_database_path
 
 
 #define sqlite connection url
-SQLALCHEMY_DATABASE_URL = f"sqlite:////{get_database_path('db.sqlite3')}"
-
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{get_database_path('db.sqlite3')}"
+print("SQLALCHEMY_DATABASE_URL: ", SQLALCHEMY_DATABASE_URL)
 # create new engine instance 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
