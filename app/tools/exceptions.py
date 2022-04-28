@@ -31,3 +31,8 @@ class IncompleteDataError(BaseError):
 class NoComercioError(BaseError):
     rc = -1005
     msg = "Comercio not found"
+
+
+class AuthenticationFailedError(BaseError):
+    rc = 401
+    msg = "API key is not valid"

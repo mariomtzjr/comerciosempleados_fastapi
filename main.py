@@ -1,6 +1,11 @@
+import secrets
+
 from typing import List
 from sqlalchemy.orm import Session
+
+from fastapi import Depends
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from app import models
 from app.database import engine, SessionLocal
@@ -14,11 +19,13 @@ from app.crud import (
     )
 from app.schemas import ComercioRequestModel, EmpleadoRequestModel
 from app.tools.exceptions import *
+from app.tools.authentication import BasicAuthentication
 from app import create_app
 
 
 app = create_app()
 db = SessionLocal()
+security = HTTPBasic()
 
 
 @app.on_event("startup")
@@ -48,7 +55,9 @@ def shutdown():
 ListComercios = List[ComercioRequestModel,]
 
 @app.get("/comercios")
-def get_list_comercios():
+def get_list_comercios(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = BasicAuthentication.authenticate_credentials(db, credentials.username, credentials.password, request=None)
+
     comercios = list_comercios(db)
     # return object founded
     return {"comercios": comercios}
@@ -77,7 +86,9 @@ def get_comercio_by_id(id: int):
 
 
 @app.get("/empleados")
-def get_list_empleados():
+def get_list_empleados(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = BasicAuthentication.authenticate_credentials(db, credentials.username, credentials.password, request=None)
+    
     empleados = list_empleados(db)
     
     return {"empleados": empleados}
